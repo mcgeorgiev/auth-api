@@ -12,13 +12,10 @@ export class PostgresUserRepository implements UserRepository {
         const user = await this.client("users").select("id", "email", "password")
             .where("email", email)
             .first();
-
         return new User(user.id, user.email, user.password);
     }
 
-    public create(email: string, password: string) {
-
+    public async create(user: User) {
+        await this.client("users").insert({ id: user.id, email: user.email, password: user.password });
     }
 }
-
-// db interaction functions
