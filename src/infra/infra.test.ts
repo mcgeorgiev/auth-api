@@ -1,8 +1,8 @@
 import knex from "knex";
 // import { Id, User } from "./models";
 import {PostgresUserRepository} from "./infra";
-import {User} from "./models/user";
-import {Id} from "./models/id";
+import {User} from "../models/user";
+import {Id} from "../models/id";
 
 const dbConnection = knex({
     client: "pg",
