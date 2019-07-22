@@ -51,9 +51,7 @@ export class UserService {
               }
             );
         } else {
-            console.log("here")
             throw new Error("Unsuccessful.");
         }
-        return undefined;
     }
 }

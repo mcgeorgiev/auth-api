@@ -23,10 +23,9 @@ describe("UserService", () => {
         expect(token).toBeDefined();
     });
     test("logs in in unsuccessfully", () => {
-        passwordServiceMock.comparePasswords = (password, hash) => true;
+        passwordServiceMock.comparePasswords = (password, hash) => false;
         const service = new UserService(repoMock, passwordServiceMock);
         const data = { email: "mock@mock.com", password: "password" };
-
         expect(() => {
             service.login(data);
         }).toThrow(new Error("Unsuccessful."));
