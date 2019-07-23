@@ -38,4 +38,11 @@ describe("User", () => {
         expect(createdUser.email).toEqual("test2@test2.com");
         expect(createdUser.password).toBeDefined();
     });
+
+    test("should be", () => {
+        const user = userRepo.find("test@test.com");
+        expect(user.id).toBeDefined();
+        expect(user.email).toEqual("test@test.com");
+        expect(user.password).toEqual("password");
+    });
 });

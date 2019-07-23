@@ -20,7 +20,7 @@ export class UserService {
 
     public login(data: IUserDTO): string {
         try {
-            const user = this.repo.find(data.email)
+            const user = this.repo.find(data.email);
             const match = this.PasswordService.comparePasswords(data.password, user.password);
             if (user && match) {
                 return jwt.sign({user: user.id},
