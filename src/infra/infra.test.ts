@@ -26,7 +26,6 @@ describe("User", () => {
         expect(user.email).toEqual("test@test.com");
         expect(user.password).toEqual("password");
     });
-
     test("should be created", async (done) => {
         const user = new User(new Id(), "test2@test2.com", "secret-password")
         await userRepo.create(user);
@@ -37,12 +36,5 @@ describe("User", () => {
         expect(createdUser.id).toBeDefined();
         expect(createdUser.email).toEqual("test2@test2.com");
         expect(createdUser.password).toBeDefined();
-    });
-
-    test("should be", () => {
-        const user = userRepo.find("test@test.com");
-        expect(user.id).toBeDefined();
-        expect(user.email).toEqual("test@test.com");
-        expect(user.password).toEqual("password");
     });
 });

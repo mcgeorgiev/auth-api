@@ -10,19 +10,11 @@ export class PostgresUserRepository implements UserRepository {
         this.client = c;
     }
 
-    private f(email: string): Promise<User> {
+    public find(email: string) {
         return this.client("users").select("id", "email", "password")
             .where("email", email)
             .first()
             .then((user: any) => new User(user.id, user.email, user.password));
-    }
-
-    public find(email: string) {
-        return this.f(email).then((user) => user);
-        // return this.client("users").select("id", "email", "password")
-        //     .where("email", email)
-        //     .first()
-        //     .then((user: any) => new User(user.id, user.email, user.password));
     }
 
     public create(user: User) {

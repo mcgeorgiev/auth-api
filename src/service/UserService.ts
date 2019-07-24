@@ -18,9 +18,9 @@ export class UserService {
         this.errors = errors;
     }
 
-    public login(data: IUserDTO): string {
+    public async login(data: IUserDTO): Promise<string> {
         try {
-            const user = this.repo.find(data.email);
+            const user = await this.repo.find(data.email);
             const match = this.PasswordService.comparePasswords(data.password, user.password);
             if (user && match) {
                 return jwt.sign({user: user.id},
