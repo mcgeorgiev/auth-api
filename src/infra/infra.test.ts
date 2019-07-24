@@ -1,6 +1,6 @@
+import {Id} from "../models/id";
 import knex from "knex";
 import {PostgresUserRepository} from "./infra";
-import {Id} from "../models/id";
 import {User} from "../models/user";
 
 const dbConnection = knex({

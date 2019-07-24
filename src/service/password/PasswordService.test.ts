@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+const bcrypt = require('bcrypt');
 import {BCryptPasswordService} from "./PasswordService";
 
 describe("BCrypt Password Service", () => {

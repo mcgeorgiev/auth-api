@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import {UserRepository} from "../models/userRepository";
 import {IPasswordService} from "./password/PasswordService";
 import {IHttpErrors} from "./errors/HttpErrors";

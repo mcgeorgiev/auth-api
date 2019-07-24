@@ -1,4 +1,4 @@
-import createError from "http-errors";
+const createError = require("http-errors");
 
 export interface IHttpErrors {
     conflict: Error;

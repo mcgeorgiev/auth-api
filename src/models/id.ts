@@ -1,8 +1,8 @@
-import uuidv4 from "uuid/v4";
+import {v4 as uuid} from "uuid";
 
 export class Id {
     public id: string;
     constructor() {
-        this.id = uuidv4();
+        this.id = uuid();
     }
 }
