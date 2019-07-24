@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 export interface IPasswordService {
     comparePasswords(password: string, hash: string): boolean;

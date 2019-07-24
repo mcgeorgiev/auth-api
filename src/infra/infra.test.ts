@@ -26,6 +26,13 @@ describe("User", () => {
         expect(user.email).toEqual("test@test.com");
         expect(user.password).toEqual("password");
     });
+
+    test("should be not be found", async (done) => {
+        const user = await userRepo.find("no@user.com");
+        done();
+        expect(user).not.toBeDefined();
+
+    });
     test("should be created", async (done) => {
         const user = new User(new Id(), "test2@test2.com", "secret-password")
         await userRepo.create(user);

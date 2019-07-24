@@ -10,7 +10,6 @@ describe("POST /login ", () => {
                 password: "password"
         });
         done();
-        console.log(response)
         // expect(response.body).toEqual(["Elie", "Matt", "Joel", "Michael"]);
         // expect(response.status).toBe(200);
     });

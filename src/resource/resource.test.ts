@@ -7,7 +7,7 @@ const mockRequest = (email: string, password: string) => {
 };
 
 const mockResponse = () => {
-    return { json: jest.fn().mockReturnValue({}) };
+    return { json: jest.fn().mockReturnValue({default: "response"}) };
 };
 
 const mockUserService = {
@@ -22,6 +22,7 @@ describe("User Resource", () => {
         mockUserService.login.mockImplementation((email: any, password: any) => token);
 
         const response = await login(mockUserService)(req, res);
+        done();
 
         expect(mockUserService.login).toBeCalledWith("test@email.com", "password");
         expect(res.json).toHaveBeenCalledWith({

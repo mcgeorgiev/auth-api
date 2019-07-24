@@ -14,7 +14,8 @@ export class PostgresUserRepository implements UserRepository {
         return this.client("users").select("id", "email", "password")
             .where("email", email)
             .first()
-            .then((user: any) => new User(user.id, user.email, user.password));
+            .then((user: any) => new User(user.id, user.email, user.password))
+            .catch((user: any) => undefined);
     }
 
     public create(user: User) {
