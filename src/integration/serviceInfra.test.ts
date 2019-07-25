@@ -2,7 +2,7 @@ import knex from "knex";
 import {UserService} from "../service/UserService";
 import { HttpErrors as errors } from "../service/errors/HttpErrors";
 import {IPasswordService} from "../service/password/PasswordService";
-import {PostgresUserRepository} from "./infra";
+import {PostgresUserRepository} from "../infra/infra";
 
 const dbConnection = knex({
     client: "pg",

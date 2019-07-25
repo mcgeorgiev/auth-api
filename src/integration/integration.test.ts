@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "./app";
+import app from "../resource/app";
 
 describe("POST /login ", () => {
     test("can issue jwt", async (done) => {
@@ -11,6 +11,6 @@ describe("POST /login ", () => {
         });
         done();
         // expect(response.body).toEqual(["Elie", "Matt", "Joel", "Michael"]);
-        // expect(response.status).toBe(200);
+        expect(response.status).toBe(200);
     });
 });

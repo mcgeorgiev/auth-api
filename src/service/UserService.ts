@@ -20,6 +20,7 @@ export class UserService {
 
     public async login(data: IUserDTO): Promise<string> {
         // try {
+        console.log("hereeeeeeeeeeeeeeeeeeeee")
             const user = await this.repo.find(data.email);
             if (user) {
                 const match = this.PasswordService.comparePasswords(data.password, user.password);

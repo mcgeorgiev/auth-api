@@ -21,10 +21,9 @@ describe("User Resource", () => {
         const token = "A JWT!";
         mockUserService.login.mockImplementation((email: any, password: any) => token);
 
-        const response = await login(mockUserService)(req, res);
+        await login(mockUserService)(req, res);
         done();
-
-        expect(mockUserService.login).toBeCalledWith("test@email.com", "password");
+        expect(mockUserService.login).toBeCalledWith({email: "test@email.com", password: "password"});
         expect(res.json).toHaveBeenCalledWith({
             message: "Authentication successful!",
             success: true,
