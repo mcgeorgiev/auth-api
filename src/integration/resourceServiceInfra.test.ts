@@ -1,33 +1,39 @@
 import knex from "knex";
 import {PostgresUserRepository} from "../infra/infra";
+import {newId} from "../models/id";
 import {login} from "../resource/resource";
 import {HttpErrors as errors} from "../service/errors/HttpErrors";
 import {IPasswordService} from "../service/password/PasswordService";
 import {UserService} from "../service/UserService";
-
-const dbConnection = knex({
-    client: "pg",
-    connection: "postgres://postgres:postgres@localhost:5432/my_db"
-});
+import {createTestUser} from "../testHelpers";
 
 let userRepo: PostgresUserRepository;
+let dbConnection: any;
 
 const passwordServiceMock = {
     comparePasswords: (password, hash) => true
 } as IPasswordService;
 
-beforeAll(() => {
+beforeEach(() => {
+    dbConnection = knex({
+        client: "pg",
+        connection: "postgres://postgres:postgres@localhost:5432/my_db"
+    });
     userRepo = new PostgresUserRepository(dbConnection);
 });
 
-afterAll(() => {
+afterEach(async (done) => {
+    await userRepo.truncate();
+    done();
     dbConnection.destroy();
 });
 
 describe("Resource - Service - Infra Integration", () => {
     test("Can return successful json response", async (done) => {
-        const service = new UserService(userRepo, passwordServiceMock, errors);
-        const req = {body: { email: "test@test.com", password: "password" }};
+        await createTestUser(dbConnection);
+
+        const service = new UserService(userRepo, passwordServiceMock, errors, newId);
+        const req = {body: { email: "existing@user.com", password: "password" }};
         const res = {
             json: (args: any) => args
         };
