@@ -2,6 +2,7 @@ import knex from "knex";
 import {newId} from "../models/id";
 import {User} from "../models/user";
 import {PostgresUserRepository} from "./infra";
+import {createTestUser} from "../testHelpers";
 
 let userRepo: PostgresUserRepository;
 let dbConnection: any;
@@ -20,11 +21,9 @@ afterEach(async (done) => {
     dbConnection.destroy();
 });
 
-const createTestUser = () => dbConnection.raw("insert into users values ('1', 'existing@user.com', 'password')");
-
 describe("User", () => {
     test("should be found", async (done) => {
-        await createTestUser();
+        await createTestUser(dbConnection);
         done();
 
         const user = await userRepo.find("existing@user.com");
