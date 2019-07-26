@@ -19,24 +19,18 @@ export class UserService {
     }
 
     public async login(data: IUserDTO): Promise<string> {
-        // try {
-        console.log("hereeeeeeeeeeeeeeeeeeeee")
-            const user = await this.repo.find(data.email);
-            if (user) {
-                const match = this.PasswordService.comparePasswords(data.password, user.password);
-                if (match) {
-                    return jwt.sign({user: user.id},
-                        "secretkey123",
-                        {
-                            expiresIn: "24h"
-                        }
-                    );
-                }
+        const user = await this.repo.find(data.email);
+        if (user) {
+            const match = this.PasswordService.comparePasswords(data.password, user.password);
+            if (match) {
+                return jwt.sign({user: user.id},
+                    "secretkey123",
+                    {
+                        expiresIn: "24h"
+                    }
+                );
             }
-            throw this.errors.conflict;
-        // } catch (err) {
-        //     console.log(err)
-        //     throw err;
-        // }
+        }
+        throw this.errors.conflict;
     }
 }

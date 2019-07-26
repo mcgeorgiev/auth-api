@@ -1,16 +1,24 @@
 import request from "supertest";
-import app from "../resource/app";
+import App from "../resource/app";
 
 describe("POST /login ", () => {
-    test("can issue jwt", async (done) => {
-        const response = await request(app)
+    test("can issue jwt", (done) => {
+        const app = App.create()
+        const response = request(app)
             .post("/login")
             .send({
                 email: "test@test.com",
                 password: "password"
-        });
-        done();
-        // expect(response.body).toEqual(["Elie", "Matt", "Joel", "Michael"]);
-        expect(response.status).toBe(200);
+            })
+            .expect(200, done);
+
+            // .end(function(err, res) {
+            //     console.log("err")
+            //     if (err) return done(err);
+            //     done();
+            // });
+        // App.disconnect()
+        // done();
+        // expect(response.status).toBe(200);
     });
 });
