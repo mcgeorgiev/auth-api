@@ -1,8 +1,8 @@
 import * as jwt from "jsonwebtoken";
-import {UserRepository} from "../models/userRepository";
-import {IPasswordService} from "./password/PasswordService";
-import {IHttpErrors} from "./errors/HttpErrors";
 import {User} from "../models/user";
+import {UserRepository} from "../models/userRepository";
+import {IHttpErrors} from "./errors/HttpErrors";
+import {IPasswordService} from "./password/PasswordService";
 
 interface IUserDTO {
     email: string;
@@ -26,12 +26,7 @@ export class UserService {
         if (user) {
             const match = this.PasswordService.comparePasswords(data.password, user.password);
             if (match) {
-                return jwt.sign({user: user.id},
-                    "secretkey123",
-                    {
-                        expiresIn: "24h"
-                    }
-                );
+                return this.createJWT(user.id);
             }
         }
         throw this.errors.unauthorized;
@@ -41,38 +36,17 @@ export class UserService {
         const user = await this.repo.create(
             new User(this.newId(), data.email, this.PasswordService.hashPassword(data.password)));
         if (user) {
-            return jwt.sign({user: user.id},
-                "secretkey123",
-                {
-                    expiresIn: "24h"
-                }
-            );
+            return this.createJWT(user.id);
         }
         throw this.errors.conflict;
     }
-}
 
-// const hashPassword = (password) => bcrypt.hashSync(password, 10);
-//
-// app.post("/signup", async (req, res) => {
-//   const email = req.body.email;
-//   const password = req.body.password;
-//
-//   if (email === undefined || password === undefined) { res.sendStatus(400); }
-//
-//   try {
-//     const user = await knex("users")
-//       .select("email")
-//       .where("email", email)
-//       .first();
-//     if (!user) {
-//       await knex("users").insert({ id: generateId(), email, password: hashPassword(password) });
-//       res.sendStatus(201);
-//     } else {
-//       res.sendStatus(409);
-//     }
-//   } catch (err) {
-//     console.log(err);
-//     res.sendStatus(500);
-//   }
-// });
+    private createJWT(id: string) {
+        return jwt.sign({user: id},
+            "secretkey123",
+            {
+                expiresIn: "24h"
+            }
+        );
+    }
+}
