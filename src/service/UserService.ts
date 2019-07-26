@@ -18,7 +18,7 @@ export class UserService {
         this.repo = repo;
         this.PasswordService = PasswordService;
         this.errors = errors;
-        this.newId = newId
+        this.newId = newId;
     }
 
     public async login(data: IUserDTO): Promise<string> {
@@ -34,18 +34,21 @@ export class UserService {
                 );
             }
         }
-        throw this.errors.conflict;
+        throw this.errors.unauthorized;
     }
 
     public async create(data: IUserDTO): Promise<string> {
         const user = await this.repo.create(
             new User(this.newId(), data.email, this.PasswordService.hashPassword(data.password)));
-        return jwt.sign({user: 123},
-            "secretkey123",
-            {
-                expiresIn: "24h"
-            }
-        );
+        if (user) {
+            return jwt.sign({user: user.id},
+                "secretkey123",
+                {
+                    expiresIn: "24h"
+                }
+            );
+        }
+        throw this.errors.conflict;
     }
 }
 
