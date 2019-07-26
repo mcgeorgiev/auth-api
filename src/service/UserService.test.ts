@@ -21,31 +21,46 @@ const errorMock = {
 } as IHttpErrors;
 
 describe("UserService", () => {
-    test("logs in successfully and receives token", async (done) => {
-        const spy = jest.spyOn(repoMock, "find");
-        const service = new UserService(repoMock, passwordServiceMock, errorMock);
-        const data = { email: "mock@mock.com", password: "password" };
+    describe("logs in", () => {
+        test("successfully and receives token", async (done) => {
+            const spy = jest.spyOn(repoMock, "find");
+            const service = new UserService(repoMock, passwordServiceMock, errorMock);
+            const data = {email: "mock@mock.com", password: "password"};
 
-        const token = await service.login(data);
-        done();
+            const token = await service.login(data);
+            done();
 
-        expect(spy).toBeCalledWith("mock@mock.com");
-        expect(token).toBeDefined();
+            expect(spy).toBeCalledWith("mock@mock.com");
+            expect(token).toBeDefined();
+        });
+        test("unsuccessfully due to unknown email", async (done) => {
+            repoMock.find = (email) => undefined;
+            const service = new UserService(repoMock, passwordServiceMock, errorMock);
+            const data = {email: "wrong@email.com", password: "password"};
+
+            await expect(service.login(data)).rejects.toThrow(errorMock.conflict);
+            done();
+        });
+        test("unsuccessfully due to incorrect password", async (done) => {
+            passwordServiceMock.comparePasswords = (password, hash) => false;
+            const service = new UserService(repoMock, passwordServiceMock, errorMock);
+            const data = {email: "wrong@email.com", password: "password"};
+
+            await expect(service.login(data)).rejects.toThrow(errorMock.conflict);
+            done();
+        });
+        test("unsuccessfully due to internal server error", async (done) => {
+            repoMock.find = (email) => {
+                throw errorMock.internalServerError;
+            };
+            const service = new UserService(repoMock, passwordServiceMock, errorMock);
+            const data = {email: "mock@mock.com", password: "password"};
+
+            await expect(service.login(data)).rejects.toThrow(errorMock.internalServerError);
+            done();
+        });
     });
-    test("logs in unsuccessfully", async (done) => {
-        passwordServiceMock.comparePasswords = (password, hash) => false;
-        const service = new UserService(repoMock, passwordServiceMock, errorMock);
-        const data = { email: "wrong@email.com", password: "password" };
-
-        await expect(service.login(data)).rejects.toThrow(errorMock.conflict);
-        done();
-    });
-    test("throws 500 error", async (done) => {
-        repoMock.find = (email) => { throw errorMock.internalServerError; };
-        const service = new UserService(repoMock, passwordServiceMock, errorMock);
-        const data = { email: "mock@mock.com", password: "password" };
-
-        await expect(service.login(data)).rejects.toThrow(errorMock.internalServerError);
-        done();
-    });
+    // describe("create", () => {
+    //
+    // })
 });

@@ -1,4 +1,3 @@
-import {disconnect} from "cluster";
 
 const bodyParser = require("body-parser");
 const express = require("express");
@@ -36,7 +35,6 @@ class App {
     }
 
     public disconnect() {
-        console.log("*********************************")
         this.db.disconnect();
     }
 
