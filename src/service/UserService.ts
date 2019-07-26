@@ -13,10 +13,12 @@ export class UserService {
     private repo: UserRepository;
     private PasswordService: IPasswordService;
     private errors: IHttpErrors;
-    constructor(repo: UserRepository, PasswordService: IPasswordService, errors: IHttpErrors) {
+    private newId: () => string;
+    constructor(repo: UserRepository, PasswordService: IPasswordService, errors: IHttpErrors, newId: () => string) {
         this.repo = repo;
         this.PasswordService = PasswordService;
         this.errors = errors;
+        this.newId = newId
     }
 
     public async login(data: IUserDTO): Promise<string> {
@@ -36,7 +38,8 @@ export class UserService {
     }
 
     public async create(data: IUserDTO): Promise<string> {
-        const user = await this.repo.create(new User("id", data.email, data.password))
+        const user = await this.repo.create(
+            new User(this.newId(), data.email, this.PasswordService.hashPassword(data.password)));
         return jwt.sign({user: 123},
             "secretkey123",
             {
