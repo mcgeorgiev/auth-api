@@ -2,6 +2,7 @@ import * as jwt from "jsonwebtoken";
 import {UserRepository} from "../models/userRepository";
 import {IPasswordService} from "./password/PasswordService";
 import {IHttpErrors} from "./errors/HttpErrors";
+import {User} from "../models/user";
 
 interface IUserDTO {
     email: string;
@@ -35,6 +36,7 @@ export class UserService {
     }
 
     public async create(data: IUserDTO): Promise<string> {
+        const user = await this.repo.create(new User("id", data.email, data.password))
         return jwt.sign({user: 123},
             "secretkey123",
             {

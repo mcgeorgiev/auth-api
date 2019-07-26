@@ -7,8 +7,8 @@ import {IPasswordService} from "./password/PasswordService";
 import { UserService} from "./UserService";
 
 const repoMock = {
-    create: () => {},
-    find: (email: string) => new User(new Id(), "mock@mock.com", "password")
+    create: (user: User) => undefined,
+    find: (email: string) => new User("123", "mock@mock.com", "password")
 } as UserRepository;
 
 const passwordServiceMock = {
@@ -69,7 +69,7 @@ describe("UserService", () => {
             const token = await service.create(data);
             done();
 
-            // expect(spy).toBeCalledWith("mock@mock.com");
+            expect(spy).toBeCalledWith(new User("id", "new@user.com", "password"));
             expect(token).toBeDefined();
         })
     })
