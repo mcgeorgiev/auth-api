@@ -22,7 +22,7 @@ const errorMock = {
 
 describe("UserService", () => {
     describe("logs in", () => {
-        test("successfully and receives token", async (done) => {
+        test("successfully and returns token", async (done) => {
             const spy = jest.spyOn(repoMock, "find");
             const service = new UserService(repoMock, passwordServiceMock, errorMock);
             const data = {email: "mock@mock.com", password: "password"};
@@ -60,7 +60,17 @@ describe("UserService", () => {
             done();
         });
     });
-    // describe("create", () => {
-    //
-    // })
+    describe("create", () => {
+        test("user successfully and returns token", async (done) => {
+            const spy = jest.spyOn(repoMock, "create");
+            const service = new UserService(repoMock, passwordServiceMock, errorMock);
+            const data = {email: "new@user.com", password: "password"};
+
+            const token = await service.create(data);
+            done();
+
+            // expect(spy).toBeCalledWith("mock@mock.com");
+            expect(token).toBeDefined();
+        })
+    })
 });

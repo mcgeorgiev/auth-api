@@ -5,4 +5,9 @@ export class Id {
     constructor() {
         this.id = uuid();
     }
+    public toString = (): string => {
+        return this.id;
+    }
 }
+
+export const newId = () => uuid();

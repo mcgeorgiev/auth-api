@@ -1,29 +1,36 @@
-import {Id} from "../models/id";
 import knex from "knex";
-import {PostgresUserRepository} from "./infra";
+import {newId} from "../models/id";
 import {User} from "../models/user";
-
-const dbConnection = knex({
-    client: "pg",
-    connection: "postgres://postgres:postgres@localhost:5432/my_db"
-});
+import {PostgresUserRepository} from "./infra";
 
 let userRepo: PostgresUserRepository;
+let dbConnection: any;
 
-beforeAll(() => {
+beforeEach(() => {
+    dbConnection = knex({
+        client: "pg",
+        connection: "postgres://postgres:postgres@localhost:5432/my_db"
+    });
     userRepo = new PostgresUserRepository(dbConnection);
 });
 
-afterAll(() => {
+afterEach(async (done) => {
+    await userRepo.truncate();
+    done();
     dbConnection.destroy();
 });
 
+const createTestUser = () => dbConnection.raw("insert into users values ('1', 'existing@user.com', 'password')");
+
 describe("User", () => {
     test("should be found", async (done) => {
-        const user = await userRepo.find("test@test.com");
+        await createTestUser();
         done();
-        expect(user.id).toBeDefined();
-        expect(user.email).toEqual("test@test.com");
+
+        const user = await userRepo.find("existing@user.com");
+        done();
+        expect(user.id).toEqual("1");
+        expect(user.email).toEqual("existing@user.com");
         expect(user.password).toEqual("password");
     });
 
@@ -31,17 +38,39 @@ describe("User", () => {
         const user = await userRepo.find("no@user.com");
         done();
         expect(user).not.toBeDefined();
-
     });
+
     test("should be created", async (done) => {
-        const user = new User(new Id(), "test2@test2.com", "secret-password")
+        const id = newId();
+        const user = new User(id, "new@user.com", "secret-password");
         await userRepo.create(user);
         done();
 
-        const createdUser = await userRepo.find("test2@test2.com");
+        const newUser = await userRepo.find("new@user.com");
         done();
-        expect(createdUser.id).toBeDefined();
-        expect(createdUser.email).toEqual("test2@test2.com");
-        expect(createdUser.password).toBeDefined();
+        expect(newUser.id).toEqual(id);
+        expect(newUser.email).toEqual("new@user.com");
+        expect(newUser.password).toEqual("secret-password");
+    });
+    test("should return user when created", async (done) => {
+        const id = newId();
+        const user = new User(id, "nelw@user.com", "secret-password");
+        const createdUser = await userRepo.create(user);
+        done();
+
+        expect(createdUser.id).toEqual(id);
+        expect(createdUser.email).toEqual("nelw@user.com");
+        expect(createdUser.password).toEqual("secret-password");
+    });
+    test("should not create duplicate users", async (done) => {
+        const id = newId();
+        const user = new User(id, "new@user.com", "secret-password");
+
+        await userRepo.create(user);
+        done();
+
+        const duplicateUser = await userRepo.create(user);
+        done();
+        expect(duplicateUser).not.toBeDefined();
     });
 });

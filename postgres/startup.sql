@@ -1,6 +1,8 @@
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users (
-  id       VARCHAR(255) PRIMARY KEY,
-  email    VARCHAR(255),
+  id       VARCHAR(255),
+  email    VARCHAR(255)  PRIMARY KEY,
   password VARCHAR(255)
 );
 

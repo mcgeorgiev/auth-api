@@ -19,6 +19,17 @@ export class PostgresUserRepository implements UserRepository {
     }
 
     public create(user: User) {
-        this.client("users").insert({ id: user.id, email: user.email, password: user.password });
+            return this.client("users").insert({ id: user.id, email: user.email, password: user.password })
+                .then(() => this.client("users").select("id", "email", "password")
+                    .where("email", user.email)
+                    .first()
+                    .then((user: any) => new User(user.id, user.email, user.password))
+                    .catch((user: any) => undefined)
+                )
+                .catch((err: any) => undefined);
+        }
+
+    public truncate() {
+        return this.client.raw("truncate users").catch((err: Error) => console.log(err));
     }
 }

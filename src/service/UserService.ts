@@ -33,4 +33,38 @@ export class UserService {
         }
         throw this.errors.conflict;
     }
+
+    public async create(data: IUserDTO): Promise<string> {
+        return jwt.sign({user: 123},
+            "secretkey123",
+            {
+                expiresIn: "24h"
+            }
+        );
+    }
 }
+
+// const hashPassword = (password) => bcrypt.hashSync(password, 10);
+//
+// app.post("/signup", async (req, res) => {
+//   const email = req.body.email;
+//   const password = req.body.password;
+//
+//   if (email === undefined || password === undefined) { res.sendStatus(400); }
+//
+//   try {
+//     const user = await knex("users")
+//       .select("email")
+//       .where("email", email)
+//       .first();
+//     if (!user) {
+//       await knex("users").insert({ id: generateId(), email, password: hashPassword(password) });
+//       res.sendStatus(201);
+//     } else {
+//       res.sendStatus(409);
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     res.sendStatus(500);
+//   }
+// });

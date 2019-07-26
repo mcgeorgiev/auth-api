@@ -1,11 +1,11 @@
 import {Id} from "./id";
 
 export class User {
-    public id: Id;
+    public id: string;
     public email: string;
     public password: string;
 
-    constructor(id: Id, email: string, password: string) {
+    constructor(id: string, email: string, password: string) {
         this.id = id;
         this.email = email;
         this.password = password;
